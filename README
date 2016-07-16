@@ -1,0 +1,11 @@
+
+-libsvm
+	|- svm.h
+	|- svm.cpp
+-libconfuse
+-classificador
+	|config.h
+	|db_connection.h
+	|db_svm.h
+	|gen_classifier_model.c
+	|run_test.c	
