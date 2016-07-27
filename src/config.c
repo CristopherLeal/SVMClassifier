@@ -16,7 +16,7 @@ cfg_opt_t * get_opt(){
                          CFG_INT("kernel_type",0,CFGF_NONE),
                          CFG_FLOAT("gamma",0,CFGF_NONE),
                          CFG_FLOAT("C",1,CFGF_NONE),
-                         CFG_STR("model_filename", "", CFGF_NONE),
+                         CFG_STR("model_filename", "file.model", CFGF_NONE),
                          CFG_END()
                         };
       return opts;                  

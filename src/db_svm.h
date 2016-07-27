@@ -27,6 +27,8 @@ extern void print_svm_problem(struct svm_problem * problem);
 
 extern void save_model(struct svm_model * model);
 
+extern struct svm_model * get_model();
+
 extern void free_problem(struct svm_problem * problem);
 
 #endif

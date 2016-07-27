@@ -172,6 +172,14 @@ void save_model(struct svm_model * model){
     }
 }
 
+struct svm_model * get_model(){
+    struct svm_model * model;
+    char model_filename[100];
+    get_model_filename(G_config_file,model_filename);
+    model = svm_load_model(model_filename);
+    return model;
+}
+
 
 void print_svm_parameter(struct svm_parameter *param){
                             
