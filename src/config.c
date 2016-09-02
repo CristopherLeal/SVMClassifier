@@ -4,6 +4,7 @@
 #include "config.h"
 
 
+
 cfg_opt_t * get_opt(){
   static cfg_opt_t opts[] = {
                          CFG_STR("user", "root", CFGF_NONE),
@@ -17,6 +18,9 @@ cfg_opt_t * get_opt(){
                          CFG_FLOAT("gamma",0,CFGF_NONE),
                          CFG_FLOAT("C",1,CFGF_NONE),
                          CFG_STR("model_filename", "file.model", CFGF_NONE),
+                         CFG_STR("model_list_path","",CFGF_NONE),
+                         CFG_STR_LIST("model_list","{}",CFGF_NONE),
+                         CFG_STR_LIST("query_list","{}",CFGF_NONE),
                          CFG_END()
                         };
       return opts;                  
@@ -78,13 +82,59 @@ svm_model_info * get_svm_model_info(const char * filename){
   info->C = cfg_getfloat(cfg,"C");
   info->gamma = cfg_getfloat(cfg,"gamma");
 
-   free(cfg);
+  cfg_free(cfg);
 
    return info;
 }
 
 void free_svm_model_info(svm_model_info * info){
   free(info);
+}
+
+model_access_list * get_model_access_list(const char * filename){
+
+  int i;
+  cfg_opt_t * opts = get_opt();
+  cfg_t *cfg;
+
+  cfg = cfg_init(opts, CFGF_NONE);
+  cfg_parse(cfg, filename);
+  
+  model_access_list * ma_list = (model_access_list*)malloc(sizeof(model_access_list));
+
+  char *path, *model_list_item, *query_list_item;
+
+  path = cfg_getstr(cfg,"model_list_path");
+
+  ma_list->path = (char *)malloc(sizeof(char)*strlen(path));
+  strcpy(ma_list->path,path);
+  
+
+  for(i=0;i< cfg_size(cfg,"model_list");i++){
+
+    model_list_item = cfg_getnstr(cfg,"model_list",i);
+    ma_list->model_access_info[i].model_filename =(char*)malloc(sizeof(char)*strlen(model_list_item));
+    strcpy(ma_list->model_access_info[i].model_filename,model_list_item);
+
+    query_list_item=cfg_getnstr(cfg,"query_list",i);
+    ma_list->model_access_info[i].query =(char*)malloc(sizeof(char)*strlen(query_list_item));
+    strcpy(ma_list->model_access_info[i].query,query_list_item);
+  }
+  ma_list->size=i;
+  
+  free(cfg);
+  return ma_list;
+
+}
+
+void free_model_access_list(model_access_list * ma_list){
+  free(ma_list->path);
+  int i;
+  for(i=0; i< ma_list->size;i++){
+    free(ma_list->model_access_info[i].model_filename);
+    free(ma_list->model_access_info[i].query);
+  }
+  free(ma_list);
 }
 
 

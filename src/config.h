@@ -29,10 +29,25 @@ typedef struct svm_parameter_model_info
 	double gamma;
 }svm_model_info;
 
+typedef struct model_test_access
+{
+	char * model_filename;
+	char * query;
+} model_access;
+
+typedef struct model_test_access_list
+{
+	int size;
+	char * path;
+	model_access model_access_info[10];
+
+} model_access_list;
+
 
 # ifdef  __cplusplus
 }
 # endif
+
 
 extern cfg_opt_t * get_opt();
 
@@ -44,9 +59,15 @@ extern svm_model_info * get_svm_model_info(const char * filename);
 
 extern void free_svm_model_info(svm_model_info * info);
 
+extern model_access_list * get_model_access_list(const char * filename);
+
+extern void free_model_access_list(model_access_list * ma_list);
+
 extern void get_model_filename(const char * filename,char * model_filename);
 
 extern void get_db_query(const char * filename,char * query);
+
+
 
 
 #endif

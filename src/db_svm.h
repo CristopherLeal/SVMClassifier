@@ -9,6 +9,22 @@
 #include "db_connection.h"
 #include "svm.h"
 
+# ifdef  __cplusplus
+extern "C" {
+# endif
+
+typedef struct test_scenario
+{
+	svm_model * model;
+	svm_node ** sample;
+	char ** label;
+	int size;
+} scenario;
+
+# ifdef  __cplusplus
+}
+# endif
+
 
 
 extern void init_config(char * file);
