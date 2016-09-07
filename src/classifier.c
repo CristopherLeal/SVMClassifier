@@ -22,6 +22,8 @@ printf("%s\n", conninfo);
    free_svm_model_info(model_info);
 */
 
+   /* teste git*/
+
    model_access_list * ma_list;
    ma_list = get_model_access_list("bothunter.conf");
    printf("%s\n",ma_list->path);
