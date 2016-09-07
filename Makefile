@@ -1,7 +1,7 @@
 CXX ?= g++
 CFLAGS =  -lpq 
 LIB=-I/usr/include/postgresql
-
+OBJS= db_svm.o db_connection.o svm.o config.o
 
 svm.o: src/svm.cpp src/svm.h
 	$(CXX) $(CFLAGS) -c src/svm.cpp
@@ -23,3 +23,5 @@ gen_classifier_model: src/gen_classifier_model.c db_svm.o db_connection.o svm.o 
 run_test: src/run_test.c db_svm.o db_connection.o svm.o config.o
 	$(CXX) -o run_test src/run_test.c db_svm.o db_connection.o svm.o config.o -lconfuse $(LIB) $(CFLAGS)
  
+classifier: src/classifier.c  $(OBJS)
+	$(CXX) -o classifier src/classifier.c $(OBJS) -lconfuse $(LIB) $(CFLAGS) 

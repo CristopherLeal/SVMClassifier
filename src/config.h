@@ -6,7 +6,7 @@
 #include <string.h>
 #include <confuse.h>
 
-
+#define MAX_MODEL_LST_SIZE 10
 
 # ifdef  __cplusplus
 extern "C" {
@@ -33,13 +33,14 @@ typedef struct model_test_access
 {
 	char * model_filename;
 	char * query;
+	char * model_label;
 } model_access;
 
 typedef struct model_test_access_list
 {
 	int size;
 	char * path;
-	model_access model_access_info[10];
+	model_access model_access_info[MAX_MODEL_LST_SIZE];
 
 } model_access_list;
 
