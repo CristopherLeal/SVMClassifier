@@ -28,4 +28,12 @@ void test_error(int condition,const char * msg){
 	}
 }
 
+void concat_path(char * path, char * file , char ** final){
+	*final = (char *)malloc(sizeof(char)*( strlen(path)+ 1 + strlen(file)));
+	strcpy(*final , path);
+	strcat(*final , "/");
+	strcat(*final, file);
+}
+
+
 #endif

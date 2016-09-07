@@ -8,6 +8,9 @@
 
 #include "db_connection.h"
 #include "svm.h"
+#include "utils.h"
+
+#define MAX_LABEL_SIZE 20
 
 # ifdef  __cplusplus
 extern "C" {
@@ -18,6 +21,7 @@ typedef struct test_scenario
 	svm_model * model;
 	svm_node ** sample;
 	char ** label;
+	char * model_label;
 	int size;
 } scenario;
 
@@ -46,5 +50,15 @@ extern void save_model(struct svm_model * model);
 extern struct svm_model * get_model();
 
 extern void free_problem(struct svm_problem * problem);
+
+extern scenario * get_next_scenario();
+
+extern void free_scenario(scenario * obj);
+
+extern void load_scanario_model(char * path,model_access ma, scenario * obj);
+
+extern void load_scanario_data(model_access ma , scenario * obj);
+
+extern void load_scanario_model_label(model_access ma, scenario * obj);
 
 #endif

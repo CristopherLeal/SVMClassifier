@@ -1,7 +1,7 @@
 CXX ?= g++
 CFLAGS =  -lpq 
 LIB=-I/usr/include/postgresql
-OBJS= db_svm.o db_connection.o svm.o config.o
+OBJS= db_svm.o db_connection.o svm.o config.o utils.o
 
 svm.o: src/svm.cpp src/svm.h
 	$(CXX) $(CFLAGS) -c src/svm.cpp

@@ -21,6 +21,7 @@ cfg_opt_t * get_opt(){
                          CFG_STR("model_list_path","",CFGF_NONE),
                          CFG_STR_LIST("model_list","{}",CFGF_NONE),
                          CFG_STR_LIST("query_list","{}",CFGF_NONE),
+                         CFG_STR_LIST("model_label_list","{}",CFGF_NONE),
                          CFG_END()
                         };
       return opts;                  
@@ -102,7 +103,7 @@ model_access_list * get_model_access_list(const char * filename){
   
   model_access_list * ma_list = (model_access_list*)malloc(sizeof(model_access_list));
 
-  char *path, *model_list_item, *query_list_item;
+  char *path, *model_list_item, *query_list_item, *model_label;
 
   path = cfg_getstr(cfg,"model_list_path");
 
@@ -115,6 +116,10 @@ model_access_list * get_model_access_list(const char * filename){
     model_list_item = cfg_getnstr(cfg,"model_list",i);
     ma_list->model_access_info[i].model_filename =(char*)malloc(sizeof(char)*strlen(model_list_item));
     strcpy(ma_list->model_access_info[i].model_filename,model_list_item);
+
+    model_label = cfg_getnstr(cfg,"model_label_list",i);
+    ma_list->model_access_info[i].model_label =(char*)malloc(sizeof(char)*strlen(model_label));
+    strcpy(ma_list->model_access_info[i].model_label,model_label);
 
     query_list_item=cfg_getnstr(cfg,"query_list",i);
     ma_list->model_access_info[i].query =(char*)malloc(sizeof(char)*strlen(query_list_item));
@@ -133,6 +138,7 @@ void free_model_access_list(model_access_list * ma_list){
   for(i=0; i< ma_list->size;i++){
     free(ma_list->model_access_info[i].model_filename);
     free(ma_list->model_access_info[i].query);
+    free(ma_list->model_access_info[i].model_label);
   }
   free(ma_list);
 }

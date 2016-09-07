@@ -1,39 +1,56 @@
 #include "config.h"
+#include "db_svm.h"
+
+
+void predict_scenario(scenario * obj){
+    int i,j;
+    double result;
+    struct svm_node **x;
+    char **y; 
+       
+    printf("%s\n", obj->model_label);
+
+    x = obj->sample;
+    y = obj->label;
+
+    for(i=0 ; i < obj -> size ;i++){
+      result = svm_predict(obj->model, obj->sample[i]);
+      if(!is_equal(result,0.0f)){
+        printf("%s | %s \n", y[i], obj->model_label);
+      }
+    }
+
+/*
+    for(int i=0; i < obj->size; i++){
+            printf("\n%s\n","------------------------------------------------------" );
+            printf("[%s]->",y[i] );
+            for (int j = 0; x[i][j].index != -1; j++){
+                printf("(%d ,%f )",x[i][j].index,x[i][j].value);
+            }
+    }
+    printf("\n\n");   
+
+    if(obj->model != NULL)
+      printf("%s\n","carregou model" );
+      */
+   
+}
 
 int main(void)
 {
-/*
-  svm_model_info * model_info;
-  model_info = get_svm_model_info("bothunter.conf");
-  printf("\nparameters %d | %d | %f | %f \n",model_info->svm_type,
-  	model_info->kernel_type,
-  	model_info->C,
-  	model_info->gamma );
-	
-  db_info * info ;
-  info = get_db_info("bothunter.conf");
-  printf("%s\n",info->dbname );
-  char  conninfo[100];
 
-sprintf(conninfo,"user=%s password=%s dbname=%s",info->user,info->password,info->dbname);
-printf("%s\n", conninfo);
+ 
 
-   free_db_info(info);
-   free_svm_model_info(model_info);
-*/
+  init_config("bothunter.conf");
+  scenario * obj; 
+  obj = get_next_scenario();
 
-   /* teste git*/
+  while(obj != NULL){
 
-   model_access_list * ma_list;
-   ma_list = get_model_access_list("bothunter.conf");
-   printf("%s\n",ma_list->path);
-   printf("%d\n",ma_list->size);
-   int i;
-   for(i=0;i<ma_list->size;i++){
-   	printf("%s\n",ma_list->model_access_info[i].model_filename);
-   	printf("%s\n",ma_list->model_access_info[i].query);
-   }
-   free_model_access_list(ma_list);
+    predict_scenario(obj);
+
+    obj = get_next_scenario();
+  }
 
    return 0;
 }

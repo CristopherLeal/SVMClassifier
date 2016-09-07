@@ -212,7 +212,82 @@ void print_svm_parameter(struct svm_parameter *param){
                             param->nr_weight);
 }
 
+scenario * get_next_scenario(){
+    static int i=0;
+    scenario * obj=NULL;
+    model_access_list  * ma_list = get_model_access_list(G_config_file);
 
+    if( i < ma_list->size ){
+        obj = (scenario *)malloc(sizeof(scenario));
+        load_scanario_model(ma_list->path , ma_list->model_access_info[i],obj);
+        load_scanario_model_label(ma_list->model_access_info[i],obj);
+        load_scanario_data(ma_list->model_access_info[i],obj);
+        i++;
+    }
+
+    free_model_access_list(ma_list);
+    return obj;
+}
+
+void load_scanario_model(char * path,model_access ma, scenario * obj){
+    struct svm_model * model;
+    char * full_path;
+    concat_path(path,ma.model_filename,&full_path);
+    model = svm_load_model(full_path);
+    obj->model = model;
+    free(full_path);
+}
+
+ void load_scanario_model_label( model_access ma, scenario * obj){
+    obj->model_label = (char *)malloc(sizeof(char)*strlen(ma.model_label));
+    strcpy(obj->model_label,ma.model_label);
+}
+
+ void load_scanario_data(model_access ma , scenario * obj){
+    char * query = ma.query;
+    PGresult *res;
+    struct svm_node **x;
+    struct svm_node end_node; 
+    end_node.index=-1;
+    char ** y;
+
+    res = get_result_from_db(query);
+
+    int rows =  PQntuples(res);
+    int ncols = PQnfields(res);
+    
+    x = (struct svm_node **)malloc(rows*sizeof(struct svm_node *));
+    y = (char**)malloc(rows*sizeof(char*));
+
+    for(int i=0; i<rows; i++) {
+
+        x[i] = (struct svm_node *)malloc(ncols*sizeof(struct svm_node));
+        y[i] = (char*)malloc(sizeof(char) * MAX_LABEL_SIZE );
+        for (int j = 0; j < ncols; j++){
+            
+            if(j==0){
+
+                if(!is_equal(atof(PQgetvalue(res, i, j)),0.0f)){
+                       strcpy(y[i],"127.0.0.1"); 
+                }else{
+                    strcpy(y[i],"0.0.0.0");
+                }
+            }
+            else {
+                x[i][j-1].value = atof(PQgetvalue(res, i, j)); 
+                x[i][j-1].index=j;
+            }
+        }  
+    }    
+        
+    for(int i=0; i<rows; i++){
+        x[i][ncols-1] = end_node;
+    }
+
+    obj->sample = x;
+    obj->label = y;
+    obj->size = rows;
+ }
 
 #endif
 
