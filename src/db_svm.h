@@ -16,7 +16,7 @@
 extern "C" {
 # endif
 
-typedef struct test_scenario
+typedef struct s_scenario
 {
 	svm_model * model;
 	svm_node ** sample;
@@ -24,6 +24,13 @@ typedef struct test_scenario
 	char * model_label;
 	int size;
 } scenario;
+
+typedef struct s_diagnostic
+{
+	char * addr;
+	char * date;
+	char * model_label;
+}diagnostic;
 
 # ifdef  __cplusplus
 }
@@ -60,5 +67,7 @@ extern void load_scanario_model(char * path,model_access ma, scenario * obj);
 extern void load_scanario_data(model_access ma , scenario * obj);
 
 extern void load_scanario_model_label(model_access ma, scenario * obj);
+
+extern int save_diagnostic( diagnostic * diag);
 
 #endif

@@ -35,5 +35,11 @@ void concat_path(char * path, char * file , char ** final){
 	strcat(*final, file);
 }
 
+ void current_date(char ** date){
+ 	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
+	*date = (char *)malloc(sizeof(char)*20); 
+	sprintf(*date,"%d-%d-%d",tm.tm_year+1900 , tm.tm_mon + 1 ,tm.tm_mday);
+ }
 
 #endif

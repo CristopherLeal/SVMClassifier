@@ -53,6 +53,9 @@ void free_problem(struct svm_problem * problem){
 PGresult * get_result_from_db(char * query){
 
     PGconn *conn = get_connection(G_config_file);
+     //if(conn == NULL){
+       //  conn = get_connection(G_config_file);
+    //}   
 
     if (PQstatus(conn) == CONNECTION_BAD) {
         
@@ -288,6 +291,39 @@ void load_scanario_model(char * path,model_access ma, scenario * obj){
     obj->label = y;
     obj->size = rows;
  }
+
+int save_diagnostic( diagnostic * diag){
+
+    char *stm = "INSERT INTO bot_diagnostics VALUES ($1, $2 ,$3)";
+    const char * paramValues[3];
+
+    PGconn * conn = get_connection(G_config_file);
+
+    if (PQstatus(conn) == CONNECTION_BAD) {
+        
+        fprintf(stderr, "Connection to database failed: %s\n",
+            PQerrorMessage(conn));
+        do_exit(conn);
+    }
+
+
+
+    paramValues[0] = diag->addr;
+    paramValues[1] = diag->model_label;
+    paramValues[2] = diag->date;
+
+    PGresult *res = PQexecParams(conn, stm, 3, NULL, paramValues, 
+        NULL, NULL, 0);    
+    
+    PQfinish(conn);
+
+   // printf("%s\n",PQresStatus(PQresultStatus(res)) );
+
+    if ( PQresultStatus(res) == PGRES_COMMAND_OK) 
+        return 1;
+
+    return 0;
+}
 
 #endif
 

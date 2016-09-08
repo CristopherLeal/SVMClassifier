@@ -17,11 +17,14 @@ db_svm.o: src/db_svm.c src/db_svm.h
 config.o: src/config.h	src/config.c
 	$(CXX) -c src/config.c
 
-gen_classifier_model: src/gen_classifier_model.c db_svm.o db_connection.o svm.o config.o
-	$(CXX) -o gen_classifier_model src/gen_classifier_model.c db_svm.o db_connection.o svm.o config.o -lconfuse $(LIB) $(CFLAGS)
+utils.o: src/utils.h src/utils.c
+	$(CXX) -c src/utils.c
 
-run_test: src/run_test.c db_svm.o db_connection.o svm.o config.o
-	$(CXX) -o run_test src/run_test.c db_svm.o db_connection.o svm.o config.o -lconfuse $(LIB) $(CFLAGS)
+gen_classifier_model: src/gen_classifier_model.c $(OBJS)
+	$(CXX) -o gen_classifier_model src/gen_classifier_model.c $(OBJS) -lconfuse $(LIB) $(CFLAGS)
+
+run_test: src/run_test.c $(OBJS)
+	$(CXX) -o run_test src/run_test.c $(OBJS) -lconfuse $(LIB) $(CFLAGS)
  
 classifier: src/classifier.c  $(OBJS)
 	$(CXX) -o classifier src/classifier.c $(OBJS) -lconfuse $(LIB) $(CFLAGS) 
