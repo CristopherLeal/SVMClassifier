@@ -270,11 +270,14 @@ void load_scanario_model(char * path,model_access ma, scenario * obj){
             
             if(j==0){
 
-                if(!is_equal(atof(PQgetvalue(res, i, j)),0.0f)){
+               /* if(!is_equal(atof(PQgetvalue(res, i, j)),0.0f)){
                        strcpy(y[i],"127.0.0.1"); 
                 }else{
                     strcpy(y[i],"0.0.0.0");
-                }
+                }*/
+
+                strcpy(y[i],PQgetvalue(res, i, j));    
+                    
             }
             else {
                 x[i][j-1].value = atof(PQgetvalue(res, i, j)); 

@@ -9,7 +9,12 @@ void get_conninfo(char * conninfo,const  char * filename){
     db_info *info;
     info = get_db_info(filename);
 
-    sprintf(conninfo,"user=%s password=%s dbname=%s",info->user,info->password,info->dbname);
+    sprintf(conninfo,"user=%s password=%s dbname=%s hostaddr=%s port=%d",
+                                                            info->user,
+                                                            info->password,
+                                                            info->dbname,
+                                                            info->ip,
+                                                            info->port);
     free_db_info(info);
 }
 

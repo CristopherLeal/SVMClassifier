@@ -28,3 +28,6 @@ run_test: src/run_test.c $(OBJS)
  
 classifier: src/classifier.c  $(OBJS)
 	$(CXX) -o classifier src/classifier.c $(OBJS) -lconfuse $(LIB) $(CFLAGS) 
+
+preprocessor: src/preprocessor.c $(OBJS)	
+	$(CXX) -o preprocessor src/preprocessor.c $(OBJS) -lconfuse $(LIB) $(CFLAGS)
